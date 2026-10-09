@@ -192,3 +192,47 @@ html, body {
     border-top: 1px solid #e3e8f0;
     background: #fff;
 }
+
+/* --- 대시보드 상단 레이아웃 강제 분리 (좌/우) --- */
+.topbar {
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+}
+
+.topbar-left {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 5px;
+}
+
+/* 날씨 위젯 디자인 */
+.weather-widget {
+    background-color: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 12px 18px;
+    text-align: right;
+}
+
+.weather-date {
+    font-weight: bold;
+    color: #4ea1ff;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.weather-info {
+    font-size: 13px;
+    color: #e2e8f0;
+}
+
+.weather-info span {
+    margin-left: 12px;
+}

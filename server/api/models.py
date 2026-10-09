@@ -7,27 +7,24 @@ from pydantic import BaseModel, ConfigDict, Field
 
 # --- Heartbeat ---------------------------------------------------------------
 
-class SystemInfo(BaseModel):
-    cpu_percent: float
-    mem_percent: float
-    temp_celsius: float
-    uptime_seconds: int
-
+class AgentInfo(BaseModel):
+    video_source: str       # 분석 중인 영상 소스 (예: test_fire.avi)
+    processed_frames: int   # 현재까지 분석 완료한 누적 프레임 수
+    cpu_percent: float      # 에이전트 구동 PC의 CPU 사용량 (유지)
+    mem_percent: float      # 에이전트 구동 PC의 메모리 사용량 (유지)
 
 class CameraInfo(BaseModel):
     connected: bool
     fps: float
 
-
 class InferenceInfo(BaseModel):
     model_version: str
     avg_latency_ms: int
 
-
 class HeartbeatIn(BaseModel):
     timestamp: str
     status: str
-    system: SystemInfo
+    agent: AgentInfo        # 기존 'system' 대신 'agent'로 명칭 및 구조 변경
     camera: CameraInfo
     inference: InferenceInfo
 

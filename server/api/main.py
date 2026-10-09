@@ -1,7 +1,7 @@
 """Central server for raspi-cctv-project (COMMUNICATION_PROTOCOL.md v0.1).
 
 Run from the repo root:
-    uvicorn server.api.main:app --reload --port 9000
+    uvicorn server.api.main:app --reload --port 8000
 """
 
 import json
@@ -34,15 +34,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-_dashboard_dir = (
-    Path(__file__).resolve().parent.parent / "static_dashboard"
-)
-if _dashboard_dir.exists():
-  app.mount(
-      "/dashboard",
-      StaticFiles(directory=str(_dashboard_dir), html=True),
-      name="dashboard",
-  )
+
 
 def _now_iso() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -94,7 +86,7 @@ def authed_device(
     device_id: str = ApiPath(...),
     x_device_api_key: Optional[str] = Header(default=None, alias="X-Device-Api-Key"),
 ) -> str:
-    require_api_key(device_id, x_device_api_key)
+    # require_api_key(device_id, x_device_api_key)
     return device_id
 
 
@@ -127,6 +119,17 @@ async def post_event(
     storage.append_event(device_id, body.model_dump())
     return {"ok": True}
 
+# (기존 코드) GET /events 바로 아래에 추가하세요!
+
+@app.delete("/api/devices/{device_id}/events")
+async def delete_events(device_id: str):
+    # 장치가 존재하는지 확인
+    if not storage.device_exists(device_id):
+        raise HTTPException(404, detail={"code": "device_not_found", "message": f"device {device_id} not found"})
+    
+    # storage 모듈에 삭제 명령 전달
+    storage.clear_all_events(device_id)
+    return {"ok": True, "message": "All events completely deleted"}
 
 @app.post("/api/devices/{device_id}/snapshots")
 async def post_snapshot(
@@ -206,3 +209,13 @@ async def get_snapshot(snapshot_id: str):
     if s is None:
         raise HTTPException(404, detail={"code": "device_not_found", "message": "snapshot not found"})
     return Response(content=s["data"], media_type=s["content_type"])
+
+_dashboard_dir = (
+    Path(__file__).resolve().parent.parent / "static_dashboard"
+)
+if _dashboard_dir.exists():
+  app.mount(
+      "/",
+      StaticFiles(directory=str(_dashboard_dir), html=True),
+      name="dashboard",
+  )

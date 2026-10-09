@@ -33,7 +33,7 @@ _DEFAULT_DB = _REPO_ROOT / "data" / "cctv.db"
 _DB_PATH = Path(os.environ.get("CCTV_DB_PATH", str(_DEFAULT_DB)))
 
 # Seed device (only applied when the devices table is empty).
-_SEED_DEVICE = ("rpi-001", "dev-key-rpi-001", "정문 CCTV")
+_SEED_DEVICE = ("local-ai-server", "dev-key-rpi-001", "메인 노트북 관제 채널")
 
 _lock = threading.Lock()
 _conn: sqlite3.Connection
@@ -300,3 +300,9 @@ def query_events(
     limit: int = 100,
 ) -> List[dict]:
     return _query("events", device_id, since, until, limit)
+
+def clear_all_events(device_id: str) -> None:
+    """특정 장치의 모든 이벤트 기록을 DB에서 영구 삭제합니다."""
+    with _lock:
+        _conn.execute("DELETE FROM events WHERE device_id = ?", (device_id,))
+        _conn.commit()
