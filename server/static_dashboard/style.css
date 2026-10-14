@@ -193,46 +193,82 @@ html, body {
     background: #fff;
 }
 
-/* --- 대시보드 상단 레이아웃 강제 분리 (좌/우) --- */
-.topbar {
-    flex-direction: row !important;
-    justify-content: space-between !important;
-    align-items: flex-start !important;
-}
-
-.topbar-left {
+/* 우측 상단 날씨 위젯 스타일 */
+.weather-widget {
+    position: absolute;
+    top: 20px;
+    right: 30px; /* 우측 끝에 배치 */
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    align-items: flex-end;
+    gap: 8px;
+    color: #e2e8f0; /* 밝은 회색 글씨 */
 }
 
-.topbar-right {
+.weather-search {
     display: flex;
-    align-items: flex-start;
-    margin-top: 5px;
+    background: #2d3748; /* 어두운 배경 */
+    border: 1px solid #4a5568;
+    border-radius: 6px;
+    overflow: hidden;
 }
 
-/* 날씨 위젯 디자인 */
-.weather-widget {
-    background-color: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    padding: 12px 18px;
-    text-align: right;
+.weather-search input {
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    font-size: 13px;
+    outline: none;
+    width: 150px;
 }
 
-.weather-date {
-    font-weight: bold;
-    color: #4ea1ff;
+.weather-search input::placeholder {
+    color: #a0aec0;
+}
+
+.weather-search button {
+    background: #4299e1; /* 파란색 검색 버튼 */
+    border: none;
+    color: white;
+    padding: 0 10px;
+    cursor: pointer;
     font-size: 14px;
-    margin-bottom: 8px;
+    transition: background 0.2s;
+}
+
+.weather-search button:hover {
+    background: #3182ce;
 }
 
 .weather-info {
-    font-size: 13px;
-    color: #e2e8f0;
+    display: flex;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-.weather-info span {
-    margin-left: 12px;
+#w-location {
+    color: #63b3ed; /* 지역명 강조 */
+    margin-right: 5px;
+}
+
+/* ==========================================
+   🚨 화재 경보 점멸 애니메이션 
+   ========================================== */
+@keyframes flashRed {
+    0% { background-color: rgba(255, 71, 87, 0.05); box-shadow: 0 0 10px rgba(255, 71, 87, 0.2); border-color: #ff4757; }
+    50% { background-color: rgba(255, 71, 87, 0.2); box-shadow: 0 0 25px rgba(255, 71, 87, 0.6); border-color: #ff4757; }
+    100% { background-color: rgba(255, 71, 87, 0.05); box-shadow: 0 0 10px rgba(255, 71, 87, 0.2); border-color: #ff4757; }
+}
+
+/* 이 클래스가 붙으면 섹션 전체가 빨갛게 깜빡거림 */
+.alarm-active {
+    animation: flashRed 1s infinite !important;
+    border: 2px solid #ff4757 !important;
+    transition: all 0.3s ease;
 }
